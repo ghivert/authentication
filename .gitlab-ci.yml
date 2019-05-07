@@ -19,11 +19,11 @@ deploy-new:
   script:
     - IMG_TO_RUN=$(docker images | grep 'authentication   latest' | awk '{ print $3}')
     - docker run -p 4200:8080 -d -e HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL} -e HEARTBEAT_TIMEOUT=${HEARTBEAT_TIMEOUT} ${IMG_TO_RUN}
-stop-old:
-  stage: stop-old
-  script:
-    - IMG_TO_DEL=$(docker images | grep 'authentication   latest' | awk '{ print $3}')
-    - CONTAINER_TO_STOP=$(docker ps | grep ${IMG_TO_DEL}  | awk '{ print $1}')
-    - docker stop ${CONTAINER_TO_STOP}
-    - docker rm ${CONTAINER_TO_STOP}
-    - docker rmi ${IMG_TO_DEL}
+# stop-old:
+#   stage: stop-old
+#   script:
+#     - IMG_TO_DEL=$(docker images | grep 'authentication   latest' | awk '{ print $3}')
+#     - CONTAINER_TO_STOP=$(docker ps | grep ${IMG_TO_DEL}  | awk '{ print $1}')
+#     - docker stop ${CONTAINER_TO_STOP}
+#     - docker rm ${CONTAINER_TO_STOP}
+#     - docker rmi ${IMG_TO_DEL}
