@@ -4,8 +4,8 @@ before_script:
 
 stages:
   - build
-  - stop-old
   - deploy-new
+  # - stop-old
 
 build:
   stage: build
