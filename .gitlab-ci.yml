@@ -10,7 +10,7 @@ stages:
 build:
   stage: build
   script:
-    - IMG_TO_DEL=$(docker images | grep 'authentication   latest' | awk '{ print $3}')
+    - IMG_TO_DEL=$(docker images | grep 'registry.gitlab.com/wolfoxco/ikigai/authentication' | awk '{ print $3}')
     - docker tag ${IMG_TO_DEL} authentication_to_del
     - docker build -t registry.gitlab.com/wolfoxco/ikigai/authentication .
     - docker push registry.gitlab.com/wolfoxco/ikigai/authentication
