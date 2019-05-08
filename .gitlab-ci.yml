@@ -18,7 +18,7 @@ deploy-new:
   stage: deploy-new
   script:
     - IMG_TO_RUN=$(docker images | grep 'authentication   latest' | awk '{ print $3}')
-    - NEW_INSTANCE=$(docker run -p 4200:8080 -d -e HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL} -e HEARTBEAT_TIMEOUT=${HEARTBEAT_TIMEOUT} ${IMG_TO_RUN})
+    - NEW_INSTANCE=$(docker run -p 4322:8080 -d -e HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL} -e HEARTBEAT_TIMEOUT=${HEARTBEAT_TIMEOUT} ${IMG_TO_RUN})
     - docker rename ${NEW_INSTANCE} authentication
 stop-old:
   stage: stop-old
