@@ -10,15 +10,15 @@ stages:
 build:
   stage: build
   script:
-    - IMG_TO_DEL=$(docker images | grep 'registry.gitlab.com/wolfoxco/ikigai/authentication' | awk '{ print $3}')
+    - IMG_TO_DEL=$(docker images registry.gitlab.com/wolfoxco/ikigai/authentication | grep 'latest' | awk '{ print $3}')
     - docker tag ${IMG_TO_DEL} authentication_to_del
     - docker build -t registry.gitlab.com/wolfoxco/ikigai/authentication .
     - docker push registry.gitlab.com/wolfoxco/ikigai/authentication
 deploy-new:
   stage: deploy-new
   script:
-    - IMG_TO_RUN=$(docker images | grep 'authentication   latest' | awk '{ print $3}')
-    - NEW_INSTANCE=$(docker run -p 4322:8080 -d ${IMG_TO_RUN})
+    - IMG_TO_RUN=$(docker images registry.gitlab.com/wolfoxco/ikigai/authentication | grep 'latest' | awk '{ print $3}')
+    - NEW_INSTANCE=$(docker run -p 4262:8080 -d ${IMG_TO_RUN})
     - docker rename ${NEW_INSTANCE} authentication
 stop-old:
   stage: stop-old
