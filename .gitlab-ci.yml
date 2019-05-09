@@ -18,7 +18,7 @@ deploy-new:
   stage: deploy-new
   script:
     - IMG_TO_RUN=$(docker images registry.gitlab.com/wolfoxco/ikigai/authentication | grep 'latest' | awk '{ print $3}')
-    - NEW_INSTANCE=$(docker run -p 4262:8080 -d -t ${IMG_TO_RUN})
+    - NEW_INSTANCE=$(docker run -p 4262:8080 -d -t --restart unless-stopped ${IMG_TO_RUN})
     - docker rename ${NEW_INSTANCE} authentication
 stop-old:
   stage: stop-old
