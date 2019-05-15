@@ -23,6 +23,20 @@
   resolved "https://registry.yarnpkg.com/@frenchpastries/arrange/-/arrange-0.1.0.tgz#476f3b74797b7d80d4ad70d104ff5d66400d0639"
   integrity sha512-gPA5C1Uuqd8vy6tgIlPXLadC3aruG+nMaaU5pGnhlgz8yeb76jJV1aEjhbGRrW7LPdL2ErFA4IA0hgpvmd2jrQ==
 
+"@frenchpastries/assemble@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@frenchpastries/assemble/-/assemble-0.2.0.tgz#db63d409b8eb58fd735d2d7f2d20f9587fe6e791"
+  integrity sha512-9IalHOJrj4XNMm8+IT9VhU4KFgmTiavXv794AreZOd6hcdipO3YXgLMP5DmPswn1d80vZ1CJAgJQADCqXb6uaw==
+  dependencies:
+    chalk "^2.4.2"
+
+"@frenchpastries/customer@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@frenchpastries/customer/-/customer-0.1.0.tgz#f83b78b7c6d83fbacf4698afeb6c881db1878f2b"
+  integrity sha512-iez1bxCmG4jlfp+MVgTfMPTFpb/xM9NtTvYNeu+jpoffBdDVeWugBOOarfjBxMgaUhRM5o/4fZRm9nmPouxkJg==
+  dependencies:
+    node-fetch "^2.3.0"
+
 "@frenchpastries/millefeuille@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@frenchpastries/millefeuille/-/millefeuille-0.1.7.tgz#ef97fa572d159f4985175bc23ed55a53e396850e"
@@ -518,6 +532,11 @@ dotenv@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
   integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
+
+dotenv@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.0.0.tgz#ed310c165b4e8a97bb745b0a9d99c31bda566440"
+  integrity sha512-30xVGqjLjiUOArT4+M5q9sYdvuR4riM6yK9wMcas9Vbp6zZa+ocC9dp6QoftuhTPhFAiLK/0C5Ni2nou/Bk8lg==
 
 duplexer3@^0.1.4:
   version "0.1.4"
@@ -1424,6 +1443,11 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
+
+node-fetch@^2.3.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.5.0.tgz#8028c49fc1191bba56a07adc6e2a954644a48501"
+  integrity sha512-YuZKluhWGJwCcUu4RlZstdAxr8bFfOVHakc1mplwHkk8J+tqM1Y5yraYvIUpeX8aY7+crCwiELJq7Vl0o0LWXw==
 
 node-pre-gyp@^0.10.0:
   version "0.10.3"

@@ -22,7 +22,7 @@ deploy-new:
     - dev
   script:
     - IMG_TO_RUN=$(docker images registry.gitlab.com/wolfoxco/ikigai/authentication | grep 'latest' | awk '{ print $3}')
-    - NEW_INSTANCE=$(docker run -p 4262:8080 -d -t --restart unless-stopped ${IMG_TO_RUN})
+    - NEW_INSTANCE=$(docker run -p 4262:8080 -e EXPOSED_PORT=4262 -e REGISTRY_HOST=172.17.0.1 -e REGISTRY_PORT=4200 -d -t --restart unless-stopped ${IMG_TO_RUN})
     - docker rename ${NEW_INSTANCE} authentication
 stop-old:
   stage: stop-old
