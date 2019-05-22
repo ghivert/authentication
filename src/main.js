@@ -1,6 +1,5 @@
 require('dotenv').config()
 const MilleFeuille = require('@frenchpastries/millefeuille')
-const { get, post, notFound, ...Assemble } = require('@frenchpastries/assemble')
 const { response } = require('@frenchpastries/millefeuille/response')
 const client = require('@frenchpastries/customer')
 const pjson = require('../package.json')
