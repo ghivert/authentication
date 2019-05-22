@@ -12,7 +12,11 @@
     "@frenchpastries/assemble": "^0.2.0",
     "@frenchpastries/customer": "^0.1.0",
     "@frenchpastries/millefeuille": "^0.1.7",
-    "@wolfox/caravel": "^0.1.2"
+    "@wolfox/caravel": "^0.1.2",
+    "argon2": "^0.23.0",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^7.11.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "dotenv": "^8.0.0",
