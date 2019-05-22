@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node src/main.js",
+    "migrate": "caravel migrate",
+    "start": "caravel migrate; node src/main.js",
     "dev": "nodemon src/main.js"
   },
   "dependencies": {
