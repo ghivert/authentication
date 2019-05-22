@@ -1,10 +1,25 @@
 require('dotenv').config()
+//init pg
+require('./pg')
+const { log } = require('./utils/logger')
+const { get, post, notFound, ...Assemble } = require('@frenchpastries/assemble')
 const MilleFeuille = require('@frenchpastries/millefeuille')
+const { response } = require('@frenchpastries/millefeuille/response')
 const { response } = require('@frenchpastries/millefeuille/response')
 const client = require('@frenchpastries/customer')
 const pjson = require('../package.json')
+const { createUserHandler, authenticateUserHandler } = require('./auth/user')
+const { checkTokenHandler, logoutHandler } = require('./auth/session')
+const ok = _ => response('OK')
 
-const handler = request => response('OK')
+const handler = Assemble.routes([
+  get('/', ok),
+  get('/createUser', createUserHandler),
+  get('/auth', authenticateUserHandler),
+  get('/checkToken', checkTokenHandler),
+  get('/logout', logoutHandler),
+  notFound(_ => ({ statusCode: 404 }))
+])
 
 const serviceInfos = {
   "name": pjson.name,
@@ -30,4 +45,4 @@ const allRoutes = Assemble.routes([
 MilleFeuille.create(
   bakeryMiddleware(allRoutes)
 )
-console.log('-----> Server up and running.')
+log('-----> Server up and running.')
