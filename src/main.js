@@ -1,15 +1,17 @@
 require('dotenv').config()
 //init pg
 require('./pg')
-const { log } = require('./utils/logger')
-const { get, post, notFound, ...Assemble } = require('@frenchpastries/assemble')
+const { get, notFound, ...Assemble } = require('@frenchpastries/assemble')
 const MilleFeuille = require('@frenchpastries/millefeuille')
 const { response } = require('@frenchpastries/millefeuille/response')
 const client = require('@frenchpastries/customer')
+
 const pjson = require('../package.json')
+const { log } = require('./utils/logger')
 const { createUserHandler, authenticateUserHandler } = require('./auth/user')
 const { checkTokenHandler, logoutHandler } = require('./auth/session')
-const ok = _ => response('OK')
+
+const ok = () => response('OK')
 
 const handler = Assemble.routes([
   get('/', ok),
@@ -17,7 +19,7 @@ const handler = Assemble.routes([
   get('/auth', authenticateUserHandler),
   get('/checkToken', checkTokenHandler),
   get('/logout', logoutHandler),
-  notFound(_ => ({ statusCode: 404 }))
+  notFound(() => ({ statusCode: 404 })),
 ])
 
 const serviceInfos = {
@@ -27,8 +29,8 @@ const serviceInfos = {
   "state": "good",
   "interface": {
     "type": "REST",
-    "value": ""
-  }
+    "value": "",
+  },
 }
 
 const bakeryMiddleware = client.register({
@@ -37,11 +39,10 @@ const bakeryMiddleware = client.register({
   serviceInfos,
 })
 
-const allRoutes = Assemble.routes([
-  get('/', () => ({ statusCode: 200 })),
-])
-
 MilleFeuille.create(
-  bakeryMiddleware(allRoutes)
+  bakeryMiddleware(
+    handler
+  )
 )
+
 log('-----> Server up and running.')
