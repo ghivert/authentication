@@ -40,9 +40,9 @@ const bakeryMiddleware = client.register({
 })
 
 MilleFeuille.create(
-  bakeryMiddleware(
+  // bakeryMiddleware(
     handler
-  )
+  // )
 )
 
 log('-----> Server up and running.')
