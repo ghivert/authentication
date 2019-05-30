@@ -1,4 +1,4 @@
-const { response, forbidden } = require('@frenchpastries/millefeuille/response')
+const { forbidden } = require('@frenchpastries/millefeuille/response')
 const argon2 = require('argon2')
 
 const { encrypt } = require('../utils/crypt')
@@ -40,7 +40,7 @@ const createUserHandler = ({ url }) => {
   return createUser(userName, password)
 }
 
-const authenticateUserHandler = ({url}) => {
+const authenticateUserHandler = ({ url }) => {
   const { userName, password, origin } = url.query
   log({ userName, password, origin })
   return authenticateUser(userName, password, origin)
