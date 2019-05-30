@@ -1,1 +1,1 @@
-DROP TABLE sessions;
+drop table sessions;

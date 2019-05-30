@@ -1,7 +1,7 @@
-CREATE TABLE sessions (
-  token TEXT NOT NULL primary key,
-  user_id uuid NOT NULL,
-  origin TEXT NOT NULL,
-  creation_date date not null default CURRENT_DATE,
+create table sessions (
+  token text not null primary key,
+  user_id uuid not null,
+  origin text not null,
+  creation_date date not null default current_date,
   expired boolean default false
 );

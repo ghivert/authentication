@@ -1,1 +1,3 @@
-DROP TABLE users;
+drop trigger if exists
+  users_moddatetime on users;
+drop table users;
