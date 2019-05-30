@@ -39,10 +39,37 @@ const bakeryMiddleware = client.register({
   serviceInfos,
 })
 
+const corsMiddleware = handler => request => {
+  if (request.method === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      }
+    }
+  } else {
+    const response = handler(request)
+    return Promise.resolve(response)
+      .then(res => ({
+        ...res,
+        headers: {
+          ...res.headers,
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE',
+          'Access-Control-Allow-Headers': 'Content-Type'
+        }
+      }))
+  }
+}
+
 MilleFeuille.create(
-  // bakeryMiddleware(
-    handler
-  // )
+  corsMiddleware(
+    // bakeryMiddleware(
+      handler
+    // )
+  )
 )
 
 log('-----> Server up and running.')
