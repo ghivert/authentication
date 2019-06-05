@@ -26,11 +26,11 @@ const authenticateUser = async (userName, password, origin) => {
     values: [cryptedUsername]
   }
   const res = await client.query(query)
-  log(res)
   if (res.rows.length < 1) {
     return forbidden('user unknown')
   }
   const row = res.rows[0]
+  log(password)
   log(row)
   const correct = await argon2.verify(row.password, password)
   if (correct) {
