@@ -7,6 +7,8 @@ const {encrypt} = require('../utils/crypt')
 const client = require('../pg')
 const {log} = require('../utils/logger')
 const {createSession} = require('./session')
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const createUser = async (userName, password) => {
   const cryptedUsername = encrypt(userName)
@@ -41,8 +43,15 @@ const authenticateUser = async (userName, password, origin) => {
 }
 
 const sendMail = (mail, url) => {
-  //TODO
   log(mail, url)
+  const msg = {
+    to: mail,
+    from: 'ikigai@wolfox.co',
+    subject: 'Reset password for ikigai',
+    text: 'Hello, Click on the link to reset your password',
+    html: '<a href="ikigai.network/resetPassword?id=' + url + '">click to reset your password</a>',
+  };
+  sgMail.send(msg)
 }
 
 const generateResetUrl = async (userName) => {
