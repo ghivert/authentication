@@ -96,7 +96,7 @@ const changePassword = async (url, password) => {
     values: [hashedPwd, cryptedUsername]
   }
   await client.query(query)
-  log('password changed', hashedPwd)
+  log('password changed', cryptedUsername, hashedPwd)
   query = {
     text: 'UPDATE reset_link SET valid=false WHERE id=$1',
     values: [url]
