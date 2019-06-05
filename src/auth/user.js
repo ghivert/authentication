@@ -89,7 +89,7 @@ const changePassword = async (url, password) => {
     await client.query(query)
     return forbidden('invalid url')
   }
-  const cryptedUsername = encrypt(row.login)
+  const cryptedUsername = row.login
   const hashedPwd = await argon2.hash(password)
   query = {
     text: 'UPDATE users SET password=$1 WHERE login=$2',
