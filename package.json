@@ -12,6 +12,7 @@
     "@frenchpastries/assemble": "^0.2.0",
     "@frenchpastries/customer": "^0.1.0",
     "@frenchpastries/millefeuille": "^0.1.7",
+    "@sendgrid/mail": "^6.4.0",
     "@wolfox/caravel": "^0.1.2",
     "argon2": "^0.23.0",
     "jsonwebtoken": "^8.5.1",
