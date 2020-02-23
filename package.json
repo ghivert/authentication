@@ -1,18 +1,18 @@
 {
-  "name": "ikigai-authentication",
+  "name": "authentication",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "migrate": "caravel migrate",
-    "start": "caravel migrate; node src/main.js",
+    "start": "caravel migrate && node src/main.js",
     "dev": "nodemon src/main.js"
   },
   "dependencies": {
     "@frenchpastries/arrange": "^0.1.0",
     "@frenchpastries/assemble": "^0.2.0",
-    "@frenchpastries/customer": "^0.1.0",
+    "@frenchpastries/customer": "^0.2.0",
     "@frenchpastries/millefeuille": "^0.1.7",
-    "@sendgrid/mail": "^6.4.0",
+    "@sendgrid/mail": "^6.5.3",
     "@wolfox/caravel": "^0.1.2",
     "argon2": "^0.23.0",
     "jsonwebtoken": "^8.5.1",

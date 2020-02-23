@@ -1,62 +1,60 @@
 const { response, forbidden } = require('@frenchpastries/millefeuille/response')
 const jwt = require('jsonwebtoken')
 
-const { log } = require('../utils/logger')
+const logger = require('../utils/logger')
 const client = require('../pg')
+const queries = require('../pg/queries')
 
-const createSession = async (uuid, origin) => {
-  log({ uuid, origin })
-  const token = await jwt.sign({
-    uuid,
-  }, process.env.RSA_PRIVATE_KEY, {
+const { RSA_PRIVATE_KEY, RSA_PUBLIC_KEY } = process.env
+
+const signJWT = uuid => {
+  return jwt.sign({ uuid }, RSA_PRIVATE_KEY, {
     expiresIn: '10y',
     algorithm: 'RS256',
   })
+}
 
-  const query = {
-    text: 'INSERT INTO sessions (user_id, token, origin) VALUES ($1, $2, $3)',
-    values: [ uuid, token, origin ],
-  }
-  await client.query(query)
+const verifyJWT = token => {
+  return jwt.verify(token, RSA_PUBLIC_KEY)
+}
+
+const createSession = async (uuid, origin) => {
+  logger.log({ uuid, origin })
+  const token = await signJWT(uuid)
+  await client.query(queries.session.create({ uuid, token, origin }))
   return response(token)
 }
 
-const checkToken = async (token) => {
-  const query = {
-    text: 'SELECT * FROM sessions WHERE token = $1',
-    values: [ token ],
+const checkToken = async token => {
+  const res = await client.query(queries.session.select(token))
+  const [row] = res.rows
+  if (row && row.expired) {
+    return forbidden('Expired Token')
+  } else {
+    const verify = await verifyJWT(token)
+    if (!verify) {
+      logout(token)
+      return forbidden('Invalid Token')
+    } else {
+      return response(verify.uuid)
+    }
   }
-  const res = await client.query(query)
-  const row = res.rows[0]
-  if (row.expired) {
-    return forbidden('token expired')
-  }
-  const verify = await jwt.verify(token, process.env.RSA_PUBLIC_KEY)
-  if (!verify) {
-    logout(token)
-    return forbidden('token invalid')
-  }
-  return response(verify.uuid)
 }
 
-const logout = async (token) => {
-  const query = {
-    text: 'UPDATE sessions SET expired = true WHERE token = $1',
-    values: [token],
-  }
-  await client.query(query)
-  return response('ok')
+const logout = async token => {
+  await client.query(queries.session.expire(token))
+  return response('OK')
 }
 
-const checkTokenHandler = async ({ url }) => {
-  const token = url.query.token
-  log(token)
+const checkTokenHandler = async ({ body }) => {
+  const { token } = JSON.parse(body)
+  logger.log(token)
   return checkToken(token)
 }
 
-const logoutHandler = async ({ url }) => {
-  const token = url.query.token
-  log(token)
+const logoutHandler = async ({ body }) => {
+  const { token } = JSON.parse(body)
+  logger.log(token)
   return logout(token)
 }
 

@@ -1,64 +1,74 @@
-const {forbidden, response} = require('@frenchpastries/millefeuille/response')
+const { forbidden, response } = require('@frenchpastries/millefeuille/response')
 const argon2 = require('argon2')
+
+const { encrypt } = require('../utils/crypt')
+const client = require('../pg')
+const queries = require('../pg/queries')
+const logger = require('../utils/logger')
+const { createSession } = require('./session')
 const uuidv4 = require('uuid/v4')
 const uuidv5 = require('uuid/v5')
-
-const {encrypt} = require('../utils/crypt')
-const client = require('../pg')
-const {log} = require('../utils/logger')
-const {createSession} = require('./session')
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-const createUser = async (userName, password) => {
-  const cryptedUsername = encrypt(userName)
+const { ORIGIN } = process.env
+
+const createUser = async (username, password) => {
+  const cryptedUsername = encrypt(username)
   const hashedPwd = await argon2.hash(password)
-  const query = {
-    text: 'INSERT INTO users (login, password) VALUES ($1, $2)',
-    values: [cryptedUsername, hashedPwd]
-  }
-  await client.query(query)
-  return authenticateUser(userName, password, 'ikigai')
+  await client.query(queries.user.create(cryptedUsername, hashedPwd))
+  return authenticateUser(username, password, ORIGIN)
 }
 
-const authenticateUser = async (userName, password, origin) => {
-  const cryptedUsername = encrypt(userName)
-  const query = {
-    text: 'SELECT * FROM users WHERE login = $1',
-    values: [cryptedUsername]
-  }
-  const res = await client.query(query)
-  if (res.rows.length < 1) {
-    return forbidden('user unknown')
-  }
-  const row = res.rows[0]
-  log(password)
-  log(row)
-  const correct = await argon2.verify(row.password, password)
-  if (correct) {
-    return createSession(row.id, origin)
+const authenticateUser = async (username, password, origin) => {
+  const cryptedUsername = encrypt(username)
+  const res = await client.query(queries.user.select(cryptedUsername))
+  const [row] = res.rows
+  logger.log(row)
+  if (row) {
+    const correct = await argon2.verify(row.password, password)
+    if (correct) {
+      return createSession(row.id, origin)
+    } else {
+      return forbidden('Bad Credentials')
+    }
   } else {
-    return forbidden('bad credentials')
+    return forbidden('Bad Credentials')
   }
+}
+
+const createUserHandler = ({ body }) => {
+  const { username, password } = JSON.parse(body)
+  logger.log({ username, password })
+  return createUser(username, password)
+}
+
+const authenticateUserHandler = ({ body }) => {
+  const { username, password, origin } = JSON.parse(body)
+  logger.log({ username, password, origin })
+  return authenticateUser(username, password, origin)
 }
 
 const sendMail = (mail, url) => {
-  log(mail, url)
+  logger.log(mail, url)
   const msg = {
     to: mail,
-    from: 'ikigai@wolfox.co',
-    subject: 'Reset password for ikigai',
+    from: 'example@example.com',
+    subject: 'Reset password',
     text: 'Hello, Click on the link to reset your password',
-    html: '<a href="ikigai.network/resetPassword?id=' + url + '">click to reset your password</a>',
-  };
+    html:
+      '<a href="https://example.com/resetPassword?id=' +
+      url +
+      '">click to reset your password</a>',
+  }
   sgMail.send(msg)
 }
 
-const generateResetUrl = async (userName) => {
+const generateResetUrl = async userName => {
   const cryptedUsername = encrypt(userName)
   let query = {
     text: 'SELECT * FROM users WHERE login = $1',
-    values: [cryptedUsername]
+    values: [cryptedUsername],
   }
   const res = await client.query(query)
   if (res.rows.length < 1) {
@@ -69,7 +79,7 @@ const generateResetUrl = async (userName) => {
   const uuid = uuidv5(cryptedUsername, seed)
   query = {
     text: 'INSERT INTO reset_link (id, login) VALUES ($1, $2)',
-    values: [uuid, cryptedUsername]
+    values: [uuid, cryptedUsername],
   }
 
   await client.query(query)
@@ -78,22 +88,22 @@ const generateResetUrl = async (userName) => {
 }
 
 const changePassword = async (url, password) => {
-  log(url, password)
+  logger.log(url, password)
   let query = {
     text: 'SELECT * FROM reset_link WHERE id=$1',
-    values: [url]
+    values: [url],
   }
   const res = await client.query(query)
   if (res.rows.length < 1) {
     return forbidden('invalid url')
   }
   const row = res.rows[0]
-  log(row)
-  log((Date.now() - row.created_at.getTime()))
-  if (!row.valid || (Date.now() - row.created_at.getTime()) > 8200000) {
+  logger.log(row)
+  logger.log(Date.now() - row.created_at.getTime())
+  if (!row.valid || Date.now() - row.created_at.getTime() > 8200000) {
     query = {
       text: 'UPDATE reset_link SET valid=false WHERE id=$1',
-      values: [url]
+      values: [url],
     }
     await client.query(query)
     return forbidden('invalid url')
@@ -102,39 +112,27 @@ const changePassword = async (url, password) => {
   const hashedPwd = await argon2.hash(password)
   query = {
     text: 'UPDATE users SET password=$1 WHERE login=$2',
-    values: [hashedPwd, cryptedUsername]
+    values: [hashedPwd, cryptedUsername],
   }
   await client.query(query)
-  log('password changed', cryptedUsername, hashedPwd)
+  logger.log('password changed', cryptedUsername, hashedPwd)
   query = {
     text: 'UPDATE reset_link SET valid=false WHERE id=$1',
-    values: [url]
+    values: [url],
   }
   await client.query(query)
   return response('ok')
 }
 
-const createUserHandler = ({url}) => {
-  const {userName, password} = url.query
-  log({userName, password})
-  return createUser(userName, password)
-}
-
-const authenticateUserHandler = ({url}) => {
-  const {userName, password, origin} = url.query
-  log({userName, password, origin})
-  return authenticateUser(userName, password, origin)
-}
-
-const generateResetUrlHandler = ({url}) => {
-  const {userName} = url.query
-  log(userName)
+const generateResetUrlHandler = ({ url }) => {
+  const { userName } = url.query
+  logger.log(userName)
   return generateResetUrl(userName)
 }
 
-const changePasswordHandler = ({url}) => {
-  const {password, uuid} = url.query
-  log(uuid, password)
+const changePasswordHandler = ({ url }) => {
+  const { password, uuid } = url.query
+  logger.log(uuid, password)
   return changePassword(uuid, password)
 }
 
@@ -142,5 +140,5 @@ module.exports = {
   createUserHandler,
   authenticateUserHandler,
   generateResetUrlHandler,
-  changePasswordHandler
+  changePasswordHandler,
 }
