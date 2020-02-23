@@ -1,0 +1,10 @@
+# JS Stuff
+node_modules/
+yarn-error.log
+
+# OS Stuff
+.DS_Store
+Thumbs.db
+
+# 12 factor app
+.env
