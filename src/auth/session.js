@@ -1,3 +1,5 @@
+const path = require('path')
+const fs = require('fs')
 const { response, forbidden } = require('@frenchpastries/millefeuille/response')
 const jwt = require('jsonwebtoken')
 
@@ -5,17 +7,51 @@ const logger = require('../utils/logger')
 const client = require('../pg')
 const queries = require('../pg/queries')
 
-const { RSA_PRIVATE_KEY, RSA_PUBLIC_KEY } = process.env
+const getRSAKeys = () => {
+  try {
+    const { RSA_PRIVATE_KEY, RSA_PUBLIC_KEY } = process.env
+    if (RSA_PRIVATE_KEY && RSA_PUBLIC_KEY) {
+      return {
+        publicKey: RSA_PUBLIC_KEY,
+        privateKey: RSA_PRIVATE_KEY,
+      }
+    }
+    const keysPath = path.resolve(process.cwd(), 'keys')
+    const publicPath = path.resolve(keysPath, 'public_key.pem')
+    const privatePath = path.resolve(keysPath, 'private_key.pem')
+    const publicKey = fs.readFileSync(publicPath, 'utf8')
+    const privateKey = fs.readFileSync(privatePath, 'utf8')
+    if (publicKey && privateKey) {
+      return { publicKey, privateKey }
+    }
+    console.log('No keys found, exiting.')
+    process.exit(1)
+  } catch (error) {
+    console.log('No keys found, exiting.')
+    process.exit(1)
+  }
+}
+
+const { publicKey, privateKey } = getRSAKeys()
 
 const signJWT = uuid => {
-  return jwt.sign({ uuid }, RSA_PRIVATE_KEY, {
+  const options = {
     expiresIn: '10y',
     algorithm: 'RS256',
+  }
+  return new Promise((resolve, reject) => {
+    jwt.sign({ uuid }, publicKey, options, (err, res) =>
+      err ? reject(err) : resolve(res)
+    )
   })
 }
 
 const verifyJWT = token => {
-  return jwt.verify(token, RSA_PUBLIC_KEY)
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, privateKey, (err, res) =>
+      err ? reject(err) : resolve(res)
+    )
+  })
 }
 
 const createSession = async (uuid, origin) => {
