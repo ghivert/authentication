@@ -2,6 +2,7 @@
   "name": "authentication",
   "version": "1.0.0",
   "private": true,
+  "main": "src/main.js",
   "scripts": {
     "migrate": "caravel migrate",
     "start": "caravel migrate && node src/main.js",
