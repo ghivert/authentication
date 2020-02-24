@@ -33,6 +33,34 @@ const selectUserByUsername = username => {
   }
 }
 
+const updateUserPassword = (password, username) => {
+  return {
+    text: 'UPDATE users SET password = $1 WHERE username = $2',
+    values: [password, username],
+  }
+}
+
+const createResetLink = (uuid, username) => {
+  return {
+    text: 'INSERT INTO reset_link (id, username) VALUES ($1, $2)',
+    values: [uuid, username],
+  }
+}
+
+const selectResetLink = id => {
+  return {
+    text: 'SELECT * FROM reset_link WHERE id = $1',
+    values: [id],
+  }
+}
+
+const invalidResetLink = id => {
+  return {
+    text: 'UPDATE reset_link SET valid = false WHERE id = $1',
+    values: [id],
+  }
+}
+
 module.exports = {
   session: {
     create: createSession,
@@ -42,5 +70,11 @@ module.exports = {
   user: {
     create: createUser,
     select: selectUserByUsername,
+    updatePassword: updateUserPassword,
+  },
+  resetLink: {
+    create: createResetLink,
+    select: selectResetLink,
+    invalid: invalidResetLink,
   },
 }
