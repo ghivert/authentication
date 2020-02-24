@@ -1,38 +1,12 @@
-const path = require('path')
-const fs = require('fs')
 const { response, forbidden } = require('@frenchpastries/millefeuille/response')
 const jwt = require('jsonwebtoken')
 
+const keys = require('../utils/keys')
 const logger = require('../utils/logger')
 const client = require('../pg')
 const queries = require('../pg/queries')
 
-const getRSAKeys = () => {
-  try {
-    const { RSA_PRIVATE_KEY, RSA_PUBLIC_KEY } = process.env
-    if (RSA_PRIVATE_KEY && RSA_PUBLIC_KEY) {
-      return {
-        publicKey: RSA_PUBLIC_KEY,
-        privateKey: RSA_PRIVATE_KEY,
-      }
-    }
-    const keysPath = path.resolve(process.cwd(), 'keys')
-    const publicPath = path.resolve(keysPath, 'public_key.pem')
-    const privatePath = path.resolve(keysPath, 'private_key.pem')
-    const publicKey = fs.readFileSync(publicPath, 'utf8')
-    const privateKey = fs.readFileSync(privatePath, 'utf8')
-    if (publicKey && privateKey) {
-      return { publicKey, privateKey }
-    }
-    console.log('No keys found, exiting.')
-    process.exit(1)
-  } catch (error) {
-    console.log('No keys found, exiting.')
-    process.exit(1)
-  }
-}
-
-const { publicKey, privateKey } = getRSAKeys()
+const { publicKey, privateKey } = keys.getRSA()
 
 const signJWT = uuid => {
   const options = {
