@@ -21,7 +21,7 @@ In the environment you need many variables.
 
 - `RSA_PRIVATE_KEY` An RSA private key.
 - `RSA_PUBLIC_KEY` The corresponding RSA public key.
-- `EXPOSED_PORT` The port on which the server is running.
+- `PORT` The port on which the server is running.
 - `HOSTNAME` The hostname on which the Authentication is running.
 - `REGISTRY_HOST` The host on which the Bakery is running.
 - `REGISTRY_PORT` The port on which the Bakery is running.
