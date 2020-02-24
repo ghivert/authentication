@@ -63,7 +63,7 @@ const generateResetUrl = async username => {
       const uuid = uuidv5(cryptedUsername, seed)
       await client.query(queries.resetLink.create(uuid, cryptedUsername))
       sendMail(username, uuid)
-      return response('ok')
+      return response('OK')
     } else {
       return { statusCode: 500 }
     }
@@ -115,9 +115,9 @@ const generateResetUrlHandler = ({ body }) => {
 }
 
 const changePasswordHandler = ({ body }) => {
-  const { password, uuid } = JSON.parse(body)
-  logger.log(uuid, password)
-  return changePassword(uuid, password)
+  const { password, resetId } = JSON.parse(body)
+  logger.log(resetId, password)
+  return changePassword(resetId, password)
 }
 
 module.exports = {

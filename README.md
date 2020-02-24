@@ -2,9 +2,11 @@
 
 Authentication provides an easy to install, easy to use authentication micro-service. While still being in development, it allows to sign up, sign in, and log in and out user right now. Of course more features are planned and on the roadmap.
 
+This project is born on an idea and major participations of [arthurescriou](https://github.com/arthurescriou). This project would not live without him. Take a look at what he’s doing. I mainly mirrored his code.
+
 ## Roadmap
 
-- [ ] Reset Password
+- [x] Reset Password
 - [ ] Delete user account
 - [ ] OAuth2
 - [ ] Back Office built-in
@@ -29,6 +31,7 @@ In the environment you need many variables.
 - `ORIGIN` The address from where you’re communicating.
 - `AES_KEY` The AES key for crypting.
 - `AES_IV` The AES param.
+- `SENDGRID_API_KEY` Your sendgrid API key.
 
 Then you can install the Authentication:
 
@@ -51,11 +54,13 @@ To call it from your application:
 ```javascript
 const mySignInHandler = request => {
   const { username, password } = request.body
-  const response = await request.services.Authentication
+  const response = await request.services.authentication
     .signIn()
     .post({
-      username,
-      password,
+      body: JSON.stringify({
+        username,
+        password,
+      })
     })
   const token = await response.text()
   // Here is the resulting token.
@@ -67,11 +72,13 @@ const mySignInHandler = request => {
 ```javascript
 const mySignUpHandler = request => {
   const { username, password } = request.body
-  const response = await request.services.Authentication
+  const response = await request.services.authentication
     .signUp()
     .post({
-      username,
-      password,
+      body: JSON.stringify({
+        username,
+        password,
+      })
     })
   const token = await response.text()
   // Here is the resulting token.
@@ -83,9 +90,9 @@ const mySignUpHandler = request => {
 ```javascript
 const myCheckTokenHandler = request => {
   const { token } = request.headers.Authorize
-  const response = await request.services.Authentication
+  const response = await request.services.authentication
     .checkToken()
-    .post({ token })
+    .post({ body: JSON.stringify({ token }) })
   const userId = await response.text()
   // Here is the resulting user UUID.
 }
@@ -96,14 +103,37 @@ const myCheckTokenHandler = request => {
 ```javascript
 const mySignOutHandler = request => {
   const { token } = request.headers.Authorize
-  const response = await request.services.Authentication
+  const response = await request.services.authentication
     .signOut()
-    .delete({ token })
+    .delete({ body: JSON.stringify({ token }) })
   const ok = await response.text()
   // assert(ok === 'OK')
 }
 ```
 
+### Reset password link
+
+```javascript
+const myResetPasswordHandler = ({ body }) => {
+  const response = await request.services.authentication
+    .sendMailReset()
+    .post({ body })
+  const ok = await response.text()
+  // assert(ok === 'OK')
+}
+```
+
+### Change password
+
+```javascript
+const myChangePasswordHandler = ({ body }) => {
+  const response = await request.services.authentication
+    .resetPassword()
+    .post({ body })
+  const ok = await response.text()
+  // assert(ok === 'OK')
+}
+```
 
 ## Full API
 
@@ -153,11 +183,35 @@ c751dcf0-4efe-43e9-99c4-acdb8b995d04
 
 ### Log out
 
-Set the session as invalid. Returns `ok`.
+Set the session as invalid. Returns `OK`.
 
 `DELETE` `/sign-out`
 ```json
 { "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
+```
+```
+OK
+```
+
+### Reset password link
+
+Send an email for reseting password. Returns `OK`.
+
+`POST` `/reset-password`
+```json
+{ "username": "rick.sanchez@miniverse.com" }
+```
+```
+OK
+```
+
+### Change password
+
+Reset the password. Returns `OK`.
+
+`POST` `/reset-password`
+```json
+{ "password": "New-password", "resetId": "XXXXXXXXXXXXXX" }
 ```
 ```
 OK
