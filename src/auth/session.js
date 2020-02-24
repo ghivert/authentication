@@ -14,7 +14,7 @@ const signJWT = uuid => {
     algorithm: 'RS256',
   }
   return new Promise((resolve, reject) => {
-    jwt.sign({ uuid }, publicKey, options, (err, res) =>
+    jwt.sign({ uuid }, privateKey, options, (err, res) =>
       err ? reject(err) : resolve(res)
     )
   })
@@ -22,7 +22,7 @@ const signJWT = uuid => {
 
 const verifyJWT = token => {
   return new Promise((resolve, reject) => {
-    jwt.verify(token, privateKey, (err, res) =>
+    jwt.verify(token, publicKey, (err, res) =>
       err ? reject(err) : resolve(res)
     )
   })
