@@ -15,7 +15,7 @@ const {
 } = require('./auth/user')
 const { checkTokenHandler, logoutHandler } = require('./auth/session')
 
-const { EXPOSED_PORT, REGISTRY_HOST, REGISTRY_PORT, HOSTNAME } = process.env
+const { PORT, REGISTRY_HOST, REGISTRY_PORT, HOSTNAME } = process.env
 
 const ok = () => response('OK')
 
@@ -33,7 +33,7 @@ const handler = routes([
 const serviceInfos = {
   name,
   version,
-  address: `${HOSTNAME}:${EXPOSED_PORT}`,
+  address: `${HOSTNAME}:${PORT}`,
   state: 0,
   interface: {
     type: 'REST',
