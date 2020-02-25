@@ -1,3 +1,4 @@
+require('dotenv').config()
 require('./pg')
 
 const { get, post, del, notFound, routes } = require('@frenchpastries/assemble')
