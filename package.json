@@ -5,8 +5,8 @@
   "main": "src/main.js",
   "scripts": {
     "migrate": "caravel migrate",
-    "start": "caravel migrate && node src/main.js",
-    "dev": "nodemon src/main.js"
+    "start": "caravel migrate && node src/run.js",
+    "dev": "nodemon src/run.js"
   },
   "dependencies": {
     "@frenchpastries/arrange": "^0.1.0",
