@@ -96,10 +96,15 @@ const changePassword = async (resetId, password) => {
   }
 }
 
-const createUserHandler = ({ body }) => {
-  const { username, password } = JSON.parse(body)
-  logger.log({ username, password })
-  return createUser(username, password)
+const createUserHandler = async ({ body }) => {
+  try {
+    const { username, password } = JSON.parse(body)
+    logger.log({ username, password })
+    return await createUser(username, password)
+  } catch (error) {
+    console.error(error)
+    return { statusCode: 503, body: 'Email already in database.' }
+  }
 }
 
 const authenticateUserHandler = ({ body }) => {
