@@ -6,7 +6,7 @@ const MilleFeuille = require('@frenchpastries/millefeuille')
 const { response } = require('@frenchpastries/millefeuille/response')
 const client = require('@frenchpastries/customer')
 
-const { name, version } = require('../package.json')
+const { version } = require('../package.json')
 const logger = require('./utils/logger')
 const {
   createUserHandler,
@@ -32,7 +32,7 @@ const handler = routes([
 ])
 
 const serviceInfos = {
-  name,
+  name: 'authentication',
   version,
   address: `${HOSTNAME}:${PORT}`,
   state: 0,
