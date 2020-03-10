@@ -11,7 +11,7 @@
   "dependencies": {
     "@frenchpastries/arrange": "^0.1.0",
     "@frenchpastries/assemble": "^0.2.0",
-    "@frenchpastries/customer": "^0.2.0",
+    "@frenchpastries/customer": "^0.2.2",
     "@frenchpastries/millefeuille": "^0.1.7",
     "@sendgrid/mail": "^6.5.3",
     "@wolfox/caravel": "^0.1.2",
