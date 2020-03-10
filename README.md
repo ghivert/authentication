@@ -17,6 +17,10 @@ It automatically connects to your [Bakery](https://github.com/FrenchPastries/Bak
 
 ## Getting Started
 
+```bash
+yarn add @gimme-my-money/authentication
+```
+
 To get it running, you need some parameters in your environment. You can use a `.env` at your root launch, the Authentication will automatically read it.
 
 In the environment you need many variables.
