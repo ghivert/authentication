@@ -18,7 +18,7 @@ It automatically connects to your [Bakery](https://github.com/FrenchPastries/Bak
 ## Getting Started
 
 ```bash
-yarn add @gimme-my-money/authentication
+yarn add @ghivert/authentication
 ```
 
 To get it running, you need some parameters in your environment. You can use a `.env` at your root launch, the Authentication will automatically read it.
@@ -58,14 +58,12 @@ To call it from your application:
 ```javascript
 const mySignInHandler = request => {
   const { username, password } = request.body
-  const response = await request.services.authentication
-    .signIn()
-    .post({
-      body: JSON.stringify({
-        username,
-        password,
-      })
-    })
+  const response = await request.services.authentication.signIn().post({
+    body: JSON.stringify({
+      username,
+      password,
+    }),
+  })
   const token = await response.text()
   // Here is the resulting token.
 }
@@ -76,14 +74,12 @@ const mySignInHandler = request => {
 ```javascript
 const mySignUpHandler = request => {
   const { username, password } = request.body
-  const response = await request.services.authentication
-    .signUp()
-    .post({
-      body: JSON.stringify({
-        username,
-        password,
-      })
-    })
+  const response = await request.services.authentication.signUp().post({
+    body: JSON.stringify({
+      username,
+      password,
+    }),
+  })
   const token = await response.text()
   // Here is the resulting token.
 }
@@ -144,18 +140,22 @@ const myChangePasswordHandler = ({ body }) => {
 The API is RESTful. All requests should contain a JSON body.
 
 ### User creation.
+
 Creates a user and a session. Returns the JWT of the session.
 
 `POST` `/sign-up`
+
 ```json
 {
   "username": "rick.sanchez@miniverse.com",
   "password": "73|2|2Ys[_]|<S!"
 }
 ```
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 ```
+
 Creates a user and a session. Returns the JWT of the session.
 
 ### Authentication.
@@ -163,12 +163,14 @@ Creates a user and a session. Returns the JWT of the session.
 Creates a session for a registered user. Returns the JWT of the session.
 
 `POST` `/sign-in`
+
 ```json
 {
   "username": "rick.sanchez@miniverse.com",
   "password": "73|2|2Ys[_]|<S!"
 }
 ```
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 ```
@@ -178,9 +180,13 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4
 Check if a session is still active and if the token is valid. Returns user UUID if everything is correct.
 
 `POST` `/check-token`
+
 ```json
-{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+}
 ```
+
 ```
 c751dcf0-4efe-43e9-99c4-acdb8b995d04
 ```
@@ -190,9 +196,13 @@ c751dcf0-4efe-43e9-99c4-acdb8b995d04
 Set the session as invalid. Returns `OK`.
 
 `DELETE` `/sign-out`
+
 ```json
-{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+}
 ```
+
 ```
 OK
 ```
@@ -202,9 +212,11 @@ OK
 Send an email for reseting password. Returns `OK`.
 
 `POST` `/reset-password`
+
 ```json
 { "username": "rick.sanchez@miniverse.com" }
 ```
+
 ```
 OK
 ```
@@ -214,9 +226,11 @@ OK
 Reset the password. Returns `OK`.
 
 `POST` `/reset-password`
+
 ```json
 { "password": "New-password", "resetId": "XXXXXXXXXXXXXX" }
 ```
+
 ```
 OK
 ```
