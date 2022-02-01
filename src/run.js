@@ -1,3 +1,3 @@
-const authentication = require('./main')
+import * as authentication from './main.js'
 
 authentication.start()

@@ -1,28 +1,31 @@
 {
-  "name": "@gimme-my-money/authentication",
+  "name": "@ghivert/authentication",
   "version": "0.1.2",
   "main": "src/main.js",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "migrate": "caravel migrate",
     "start": "caravel migrate && node src/run.js",
     "dev": "nodemon src/run.js"
   },
   "dependencies": {
-    "@frenchpastries/arrange": "^0.1.0",
-    "@frenchpastries/assemble": "^0.2.0",
+    "@frenchpastries/arrange": "^1.0.0",
+    "@frenchpastries/assemble": "^0.7.0",
     "@frenchpastries/customer": "^0.2.2",
-    "@frenchpastries/millefeuille": "^0.1.7",
-    "@sendgrid/mail": "^6.5.3",
-    "@wolfox/caravel": "^0.1.2",
-    "argon2": "^0.23.0",
+    "@frenchpastries/millefeuille": "^1.0.2",
+    "@ghivert/caravel": "^0.2.0",
+    "@sendgrid/mail": "^7.6.0",
+    "argon2": "^0.28.3",
     "jsonwebtoken": "^8.5.1",
-    "pg": "^7.11.0",
-    "uuid": "^3.3.2"
+    "pg": "^8.7.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "dotenv": "^8.0.0",
-    "eslint": "^5.15.3",
-    "nodemon": "^1.18.10"
+    "@types/node": "^17.0.14",
+    "dotenv": "^15.0.0",
+    "eslint": "^8.8.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1"
   }
 }

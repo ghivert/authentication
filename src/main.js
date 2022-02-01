@@ -1,20 +1,18 @@
-require('dotenv').config()
-require('./pg')
-
-const { get, post, del, notFound, routes } = require('@frenchpastries/assemble')
-const MilleFeuille = require('@frenchpastries/millefeuille')
-const { response } = require('@frenchpastries/millefeuille/response')
-const client = require('@frenchpastries/customer')
-
-const { version } = require('../package.json')
-const logger = require('./utils/logger')
-const {
+import 'dotenv/config'
+import './pg/pg.js'
+import { get, post, del, notFound, routes } from '@frenchpastries/assemble'
+import millefeuille from '@frenchpastries/millefeuille'
+import { response } from '@frenchpastries/millefeuille/response.js'
+import client from '@frenchpastries/customer'
+import * as logger from './utils/logger.js'
+import {
   createUserHandler,
   authenticateUserHandler,
   generateResetUrlHandler,
   changePasswordHandler,
-} = require('./auth/user')
-const { checkTokenHandler, logoutHandler } = require('./auth/session')
+} from './auth/user.js'
+import { checkTokenHandler, logoutHandler } from './auth/session.js'
+const { version } = require('../package.json')
 
 const { PORT, REGISTRY_HOST, REGISTRY_PORT, HOSTNAME } = process.env
 
@@ -48,13 +46,8 @@ const bakeryMiddleware = client.register({
   serviceInfos,
 })
 
-const start = middleware => {
-  if (middleware instanceof Function) {
-    MilleFeuille.create(bakeryMiddleware(middleware(handler)))
-  } else {
-    MilleFeuille.create(bakeryMiddleware(handler))
-  }
+export const start = middleware => {
+  const h = middleware instanceof Function ? middleware(handler) : handler
+  const _server = millefeuille.create(bakeryMiddleware(h))
   logger.log('-----> Server up and running.')
 }
-
-module.exports = { start }
