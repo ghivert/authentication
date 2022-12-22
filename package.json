@@ -17,7 +17,7 @@
     "@ghivert/caravel": "^0.2.0",
     "@sendgrid/mail": "^7.6.0",
     "argon2": "^0.28.3",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "pg": "^8.7.1",
     "uuid": "^8.3.2"
   },
